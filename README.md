@@ -42,6 +42,21 @@ let customFlowLayout = YOURCUSTOMCollectionFlowLayout()
 let viewController = GTChatNodeController(layout: customFlowLayout)
 ```
 
+> you can access chatNode and node(backgroundNode)
+``` swift
+class ChatNodeController: GTChatNodeController {
+
+    ...
+
+    func foo() {
+
+        let collectionView = self.chatNode // chatNode is equal to UICollectionView
+        let backgroundView = self.node // self.node is equal to backgroundView(UIView)
+    }
+
+}
+```
+
 ### 2. GTChatNodeDelegate implementation
 ```swift
 extension ChatNodeController: GTChatNodeDelegate {
@@ -55,14 +70,14 @@ extension ChatNodeController: GTChatNodeDelegate {
         return true
     }
 
-    func chatNode(_ cahtNode: ASCollectionNode, willBeginAppendBatchFetchWith context: ASBatchContext) {
+    func chatNode(_ chatNode: ASCollectionNode, willBeginAppendBatchFetchWith context: ASBatchContext) {
         // Network Call Handling
         // If Network Call Completed then context should be completed
         // required example
         // eg) self.completeBatchFetching(true, endDirection: .none)
     }
 
-    func chatNode(_ cahtNode: ASCollectionNode, willBeginPrependBatchFetchWith context: ASBatchContext) {
+    func chatNode(_ chatNode: ASCollectionNode, willBeginPrependBatchFetchWith context: ASBatchContext) {
         ...
     }
 }
@@ -90,6 +105,42 @@ you can see 4 steps paging status
 (4: some) is means networking is finished and got new items
 you do not need to be aware of (1: initial status) existence
 
+### 5. If you need attach message input node then override layoutSpecThatFits method on subclass
+
+> Also, when keyboard is activated, you can get keyboard height from keyboardVisibleHeight property
+``` swift
+    override func layoutSpecThatFits(_ constrainedSize: ASSizeRange, chatNode: ASCollectionNode) -> ASLayoutSpec {
+        let messageInsets: UIEdgeInsets = .init(top: .infinity,
+                                                left: 0.0,
+                                                bottom: self.keyboardVisibleHeight,
+                                                right: 0.0)
+
+        let messageLayout = ASInsetLayoutSpec(insets: messageInsets,
+                                              child: self.messageNode)
+
+        // overlay message input box onto chatNode
+        let messageOverlayedLayout = ASOverlayLayoutSpec(child: chatNode,
+                                                         overlay: messageLayout)
+
+        return ASInsetLayoutSpec(insets: .zero, child: messageOverlayedLayout)
+    }
+```
+
+### 6. overriding setupChatRangeTuningParameters method
+> If you deal with the tuning parameters for range type on your scrolling node 
+> More Information [Here](http://texturegroup.org/docs/intelligent-preloading.html)
+
+``` swift
+// origin
+        self.chatNode.setTuningParameters(ASRangeTuningParameters(leadingBufferScreenfuls: 1.5,
+                                                              trailingBufferScreenfuls: 1.5),
+                                      for: .full,
+                                      rangeType: .display)
+        self.chatNode.setTuningParameters(ASRangeTuningParameters(leadingBufferScreenfuls: 2,
+                                                              trailingBufferScreenfuls: 2),
+                                      for: .full,
+                                      rangeType: .preload)
+```
 
 ## Requirements
 - Xcode <~ 9.0

@@ -42,7 +42,7 @@ class ChatNodeController: GTChatNodeController {
     override func layoutSpecThatFits(_ constrainedSize: ASSizeRange, chatNode: ASCollectionNode) -> ASLayoutSpec {
         let messageInsets: UIEdgeInsets = .init(top: .infinity,
                                                 left: 0.0,
-                                                bottom: self.keyboardVisiableHeight + 0.0,
+                                                bottom: self.keyboardVisibleHeight + 0.0,
                                                 right: 0.0)
         let messageLayout = ASInsetLayoutSpec(insets: messageInsets,
                                               child: self.messageNode)

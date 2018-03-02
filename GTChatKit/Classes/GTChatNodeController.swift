@@ -64,7 +64,7 @@ open class GTChatNodeController: ASViewController<ASDisplayNode> {
     open var pagingStatus: PaginationStatus = .initial
     open var hasNextPrependItem: Bool = true
     open var hasNextAppendItems: Bool = true
-    open var keyboardVisiableHeight: CGFloat = 0.0
+    open var keyboardVisibleHeight: CGFloat = 0.0
     
     fileprivate lazy var batchFetchingContext = ASBatchContext()
     
@@ -130,13 +130,13 @@ open class GTChatNodeController: ASViewController<ASDisplayNode> {
     @objc private func keyboardWillAppear(notification: NSNotification) {
         if let keyboardFrame: NSValue = notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue {
             let keyboardRectangle = keyboardFrame.cgRectValue
-            self.keyboardVisiableHeight = keyboardRectangle.height
+            self.keyboardVisibleHeight = keyboardRectangle.height
             self.node.setNeedsLayout()
         }
     }
     
     @objc private func keyboardWillHide(notification: NSNotification) {
-        self.keyboardVisiableHeight = 0.0
+        self.keyboardVisibleHeight = 0.0
         self.node.setNeedsLayout()
     }
 }
