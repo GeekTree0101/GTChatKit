@@ -13,6 +13,10 @@ class ChatNodeController: GTChatNodeController {
     
     var items: [Int] = [50, 51, 52, 53, 54, 55, 56, 57, 58, 59]
     
+    lazy var messageNode = GTChatMessageBoxNode()
+    
+    private var keyboardHeight: CGFloat = 0.0
+    
     enum Section: Int {
         case prependIndicator
         case messages
@@ -29,24 +33,40 @@ class ChatNodeController: GTChatNodeController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.leadingScreensForBatching = 3.0
-        self.node.delegate = self
-        self.node.dataSource = self
+        self.chatNode.delegate = self
+        self.chatNode.dataSource = self
         self.title = "Buddy Chat"
-        self.node.backgroundColor = UIColor.frameColor
+        self.chatNode.backgroundColor = .white
+    }
+    
+    override func layoutSpecThatFits(_ constrainedSize: ASSizeRange, chatNode: ASCollectionNode) -> ASLayoutSpec {
+        let messageInsets: UIEdgeInsets = .init(top: .infinity,
+                                                left: 0.0,
+                                                bottom: self.keyboardVisiableHeight + 0.0,
+                                                right: 0.0)
+        let messageLayout = ASInsetLayoutSpec(insets: messageInsets,
+                                              child: self.messageNode)
+        let messageOverlayedLayout = ASOverlayLayoutSpec(child: chatNode,
+                                                         overlay: messageLayout)
+        return ASInsetLayoutSpec(insets: .zero, child: messageOverlayedLayout)
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        self.node.reloadData()
-        self.node.reloadData(completion: { () in
+        self.chatNode.reloadData()
+        self.chatNode.reloadData(completion: { () in
             let center = self.items.count / 2
-            self.node.scrollToItem(at: .init(item: center, section: Section.messages.rawValue),
+            self.chatNode.scrollToItem(at: .init(item: center, section: Section.messages.rawValue),
                                    at: .centeredVertically, animated: false)
         })
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+    }
+    
+    override func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        self.messageNode.dismissMessageInput()
     }
 
 }
@@ -95,11 +115,11 @@ extension ChatNodeController: GTChatNodeDelegate {
     func chatNode(_ cahtNode: ASCollectionNode, willBeginAppendBatchFetchWith context: ASBatchContext) {
         guard let lastId = self.items.last, lastId < Const.maxiumRange else {
             self.completeBatchFetching(true, endDirection: .prepend)
-            self.node.reloadSections(IndexSet(integer: Section.appendIndicator.rawValue))
+            self.chatNode.reloadSections(IndexSet(integer: Section.appendIndicator.rawValue))
             return
         }
         
-        self.node.reloadSections(IndexSet(integer: Section.appendIndicator.rawValue))
+        self.chatNode.reloadSections(IndexSet(integer: Section.appendIndicator.rawValue))
         
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Const.forceLoadDelay, execute: {
 
@@ -113,11 +133,11 @@ extension ChatNodeController: GTChatNodeDelegate {
             
             self.items = self.items + newItems
             
-            self.node.performBatchUpdates({
-                self.node.insertItems(at: appendIndexPaths)
+            self.chatNode.performBatchUpdates({
+                self.chatNode.insertItems(at: appendIndexPaths)
             }, completion: { done in
                 self.completeBatchFetching(true, endDirection: .none)
-                self.node.reloadSections(IndexSet(integer: Section.appendIndicator.rawValue))
+                self.chatNode.reloadSections(IndexSet(integer: Section.appendIndicator.rawValue))
             })
         })
     }
@@ -125,11 +145,11 @@ extension ChatNodeController: GTChatNodeDelegate {
     func chatNode(_ cahtNode: ASCollectionNode, willBeginPrependBatchFetchWith context: ASBatchContext) {
         guard let firstId = self.items.first, firstId != Const.minimumRange else {
             self.completeBatchFetching(true, endDirection: .prepend)
-            self.node.reloadSections(IndexSet(integer: Section.prependIndicator.rawValue))
+            self.chatNode.reloadSections(IndexSet(integer: Section.prependIndicator.rawValue))
             return
         }
         
-        self.node.reloadSections(IndexSet(integer: Section.prependIndicator.rawValue))
+        self.chatNode.reloadSections(IndexSet(integer: Section.prependIndicator.rawValue))
         
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Const.forceLoadDelay, execute: {
             
@@ -140,11 +160,11 @@ extension ChatNodeController: GTChatNodeDelegate {
             
             self.items = newItems + self.items
             
-            self.node.performBatch(animated: false, updates: {
-                self.node.insertItems(at: prependIndexPaths)
+            self.chatNode.performBatch(animated: false, updates: {
+                self.chatNode.insertItems(at: prependIndexPaths)
             }, completion: { done in
                 self.completeBatchFetching(true, endDirection: .none)
-                self.node.reloadSections(IndexSet(integer: Section.prependIndicator.rawValue))
+                self.chatNode.reloadSections(IndexSet(integer: Section.prependIndicator.rawValue))
             })
         })
     }
