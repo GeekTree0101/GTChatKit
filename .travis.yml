@@ -10,7 +10,7 @@ before_install:
   - pod install --project-directory=Example
 
 script:
-  - swiftlint lint --config Example/.swiftlint.yml
+  - swiftlint lint --config ./Example/.swiftlint.yml
   
 branches:
   only:
