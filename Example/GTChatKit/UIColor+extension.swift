@@ -17,4 +17,12 @@ extension UIColor {
         
         return list[index]
     }
+    
+    static var myChat: UIColor {
+        return UIColor(red: 52/255, green: 216/255, blue: 95/255, alpha: 1.0)
+    }
+    
+    static var otherChat: UIColor {
+        return UIColor(red: 206/255, green: 206/255, blue: 206/255, alpha: 1.0)
+    }
 }

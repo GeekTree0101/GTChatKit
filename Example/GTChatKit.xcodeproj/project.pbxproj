@@ -17,6 +17,8 @@
 		9BB2E2112049228900F7B531 /* ChatCellNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BB2E2102049228900F7B531 /* ChatCellNode.swift */; };
 		9BB2E213204923DC00F7B531 /* UIColor+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BB2E212204923DC00F7B531 /* UIColor+extension.swift */; };
 		9BD8FD952049428C00FD79A5 /* ChatLoadingIndicatorNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BD8FD942049428C00FD79A5 /* ChatLoadingIndicatorNode.swift */; };
+		9BD8FD9F204986AF00FD79A5 /* UIImage+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BD8FD9E204986AF00FD79A5 /* UIImage+extension.swift */; };
+		9BD8FDA12049897D00FD79A5 /* String+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BD8FDA02049897D00FD79A5 /* String+extension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,6 +50,8 @@
 		9BB2E2102049228900F7B531 /* ChatCellNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatCellNode.swift; sourceTree = "<group>"; };
 		9BB2E212204923DC00F7B531 /* UIColor+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+extension.swift"; sourceTree = "<group>"; };
 		9BD8FD942049428C00FD79A5 /* ChatLoadingIndicatorNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatLoadingIndicatorNode.swift; sourceTree = "<group>"; };
+		9BD8FD9E204986AF00FD79A5 /* UIImage+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+extension.swift"; sourceTree = "<group>"; };
+		9BD8FDA02049897D00FD79A5 /* String+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+extension.swift"; sourceTree = "<group>"; };
 		ADF7DEAED2FA41632D6589DA /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		F63FBCACB72506A223A4520C /* Pods_GTChatKit_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GTChatKit_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F665CC749B98012C3F8C38C3 /* Pods-GTChatKit_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GTChatKit_Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-GTChatKit_Tests/Pods-GTChatKit_Tests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -185,6 +189,8 @@
 			isa = PBXGroup;
 			children = (
 				9BB2E212204923DC00F7B531 /* UIColor+extension.swift */,
+				9BD8FD9E204986AF00FD79A5 /* UIImage+extension.swift */,
+				9BD8FDA02049897D00FD79A5 /* String+extension.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -418,7 +424,9 @@
 				607FACD81AFB9204008FA782 /* ChatNodeController.swift in Sources */,
 				9BB2E2112049228900F7B531 /* ChatCellNode.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
+				9BD8FD9F204986AF00FD79A5 /* UIImage+extension.swift in Sources */,
 				9BB2E213204923DC00F7B531 /* UIColor+extension.swift in Sources */,
+				9BD8FDA12049897D00FD79A5 /* String+extension.swift in Sources */,
 				9BD8FD952049428C00FD79A5 /* ChatLoadingIndicatorNode.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

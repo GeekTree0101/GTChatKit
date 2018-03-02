@@ -31,6 +31,7 @@ class ChatNodeController: GTChatNodeController {
         self.leadingScreensForBatching = 3.0
         self.node.delegate = self
         self.node.dataSource = self
+        self.title = "GTChatKit Test"
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -66,8 +67,8 @@ extension ChatNodeController: GTChatNodeDataSource {
         case Section.appendIndicator.rawValue:
             return ChatLoadingIndicatorNode()
         case Section.messages.rawValue:
-            let item = self.items[indexPath.row]
-            return ChatCellNode(item, pos: item % 2 == 0 ? .left: .right)
+            let random = Int(arc4random_uniform(UInt32(items.count)))
+            return ChatCellNode(random % 2 == 0 ? .left: .right)
         case Section.prependIndicator.rawValue:
             return ChatLoadingIndicatorNode()
         default: return ASCellNode()

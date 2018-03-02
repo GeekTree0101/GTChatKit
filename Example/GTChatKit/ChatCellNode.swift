@@ -13,13 +13,25 @@ class ChatCellNode: ASCellNode {
     typealias ATString = NSAttributedString
     typealias Node = ChatCellNode
     
+    lazy var profileImageNode: ASNetworkImageNode = {
+        let node = ASNetworkImageNode()
+        node.setURL(UIImage.randomURL, resetToDefault: true)
+        node.style.preferredSize = .init(width: 50.0, height: 50.0)
+        node.clipsToBounds = true
+        node.borderColor = UIColor.myChat.cgColor
+        node.cornerRadius = 25.0
+        node.borderWidth = 0.5
+        return node
+    }()
+    
     lazy var balloonNode: ASDisplayNode = {
         let node = ASDisplayNode()
         node.style.height = .init(unit: .points, value: 50.0)
         node.cornerRadius = 25.0
         node.style.maxWidth = .init(unit: .points,
                                     value: UIScreen.main.bounds.width / 2)
-        node.backgroundColor = UIColor.rand()
+        let isMyChat: Bool = self.contentPosition == .left
+        node.backgroundColor = isMyChat ? .otherChat: .myChat
         node.clipsToBounds = true
         return node
     }()
@@ -37,14 +49,14 @@ class ChatCellNode: ASCellNode {
     
     private let contentPosition: Position
     
-    init(_ row: Int, pos: Position) {
+    init(_ pos: Position) {
         self.contentPosition = pos
         super.init()
+        
         let attr = Node.contentAttributes
         self.contentNode.attributedText =
-            ATString(string: "Index: \(row)",
-                attributes: attr)
-        
+            ATString(string: String.randomMessage,
+                     attributes: attr)
         self.automaticallyManagesSubnodes = true
     }
     
@@ -57,13 +69,27 @@ class ChatCellNode: ASCellNode {
                                                                 overlay: contentCenterLayout)
       
         let isLeft = self.contentPosition == .left
+        
         let layoutInsets = UIEdgeInsetsMake(15.0,
                                             isLeft ? 15.0: .infinity,
                                             0.0,
                                             isLeft ? .infinity: 15.0)
         
-        return ASInsetLayoutSpec(insets: layoutInsets,
-                                 child: contentOverlayedBalloonLayout)
+        if isLeft {
+            let profileAttachBalloonLayout = ASStackLayoutSpec(direction: .horizontal,
+                                                               spacing: 10.0,
+                                                               justifyContent: .start,
+                                                               alignItems: .center,
+                                                               children: [profileImageNode, contentOverlayedBalloonLayout])
+            
+            return ASInsetLayoutSpec(insets: layoutInsets,
+                                     child: profileAttachBalloonLayout)
+            
+        } else {
+            return ASInsetLayoutSpec(insets: layoutInsets,
+                                     child: contentOverlayedBalloonLayout)
+        }
+        
     }
 }
 
