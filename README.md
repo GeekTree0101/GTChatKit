@@ -1,6 +1,6 @@
 # GTChatKit
 
-[![CI Status](http://img.shields.io/travis/Geektree0101/GTChatKit.svg?style=flat)](https://travis-ci.org/Geektree0101/GTChatKit)
+[![CI Status](http://img.shields.io/travis/Geektree0101/GTChatKit.svg?style=flat)](https://travis-ci.org/GeekTree0101/GTChatKit)
 [![Version](https://img.shields.io/cocoapods/v/GTChatKit.svg?style=flat)](http://cocoapods.org/pods/GTChatKit)
 [![License](https://img.shields.io/cocoapods/l/GTChatKit.svg?style=flat)](http://cocoapods.org/pods/GTChatKit)
 [![Platform](https://img.shields.io/cocoapods/p/GTChatKit.svg?style=flat)](http://cocoapods.org/pods/GTChatKit)
