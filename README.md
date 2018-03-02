@@ -131,7 +131,8 @@ you do not need to be aware of (1: initial status) existence
 > More Information [Here](http://texturegroup.org/docs/intelligent-preloading.html)
 
 ``` swift
-// origin
+    // default
+    open func setupChatRangeTuningParameters() {
         self.chatNode.setTuningParameters(ASRangeTuningParameters(leadingBufferScreenfuls: 1.5,
                                                               trailingBufferScreenfuls: 1.5),
                                       for: .full,
@@ -140,6 +141,7 @@ you do not need to be aware of (1: initial status) existence
                                                               trailingBufferScreenfuls: 2),
                                       for: .full,
                                       rangeType: .preload)
+    }
 ```
 
 ## Requirements
