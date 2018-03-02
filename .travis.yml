@@ -9,8 +9,8 @@ before_install:
   - gem install bundler --no-document
   - pod install --project-directory=Example
 
-script:
-  - swiftlint
+#script:
+#  - swiftlint
   
 branches:
   only:
