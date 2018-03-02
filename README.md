@@ -11,6 +11,19 @@ Also it support Bi-directional Paging CollectionView
 Why? Texture
 Texture is an iOS framework built on top of UIKit that keeps even the most complex user interfaces smooth and responsive. more information [Here](http://texturegroup.org/)
 
+
+<table>
+  <tr>
+    <td align="center">Appending</td>
+    <td align="center">Prepending</td>
+  </tr>
+  <tr>
+    <th rowspan="9"><img src="https://github.com/GeekTree0101/GTChatKit/blob/master/resource/append.gif"></th>
+    <th rowspan="9"><img src="https://github.com/GeekTree0101/GTChatKit/blob/master/resource/prepend.gif"></th>
+  </tr>
+  <tr>
+</table>
+
 ## Usage
 [example source](https://github.com/GeekTree0101/GTChatKit/tree/master/Example)
 
