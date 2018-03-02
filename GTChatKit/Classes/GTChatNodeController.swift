@@ -23,7 +23,7 @@ public protocol GTChatNodeDataSource: ASCollectionDataSource {
     
 }
 
-open class GTChatNodeController: ASViewController<ASCollectionNode> {
+open class GTChatNodeController: ASViewController<ASDisplayNode> {
     public enum BatchFetchDirection: UInt {
         case append
         case prepend
@@ -48,21 +48,23 @@ open class GTChatNodeController: ASViewController<ASCollectionNode> {
     
     open var leadingScreensForBatching: CGFloat {
         get {
-            return self.node.leadingScreensForBatching
+            return self.chatNode.leadingScreensForBatching
         }
         set(newValue) {
-            self.node.leadingScreensForBatching = newValue
+            self.chatNode.leadingScreensForBatching = newValue
         }
     }
     
     // debug logging printer control property
     open var shouldPrintLog: Bool = true
+    open let chatNode: ASCollectionNode
     
     // If you want force handling btchFetchingContext, set property as False
     open var isPagingStatusEnable: Bool = true
     open var pagingStatus: PaginationStatus = .initial
     open var hasNextPrependItem: Bool = true
     open var hasNextAppendItems: Bool = true
+    open var keyboardVisiableHeight: CGFloat = 0.0
     
     fileprivate lazy var batchFetchingContext = ASBatchContext()
     
@@ -72,26 +74,70 @@ open class GTChatNodeController: ASViewController<ASCollectionNode> {
     }
     
     required public init(layout: UICollectionViewFlowLayout) {
-        let collectionNode = ASCollectionNode(frame: .zero,
-                                              collectionViewLayout: layout)
-        super.init(node: collectionNode)
+        chatNode = ASCollectionNode(frame: .zero,
+                                    collectionViewLayout: layout)
+        super.init(node: ASDisplayNode())
+        self.node.automaticallyManagesSubnodes = true
         self.setupChatRangeTuningParameters()
+        
+        self.node.layoutSpecBlock = { (_, constrainedSize) -> ASLayoutSpec in
+            return self.layoutSpecThatFits(constrainedSize, chatNode: self.chatNode)
+        }
+        
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(keyboardWillAppear),
+                                               name: NSNotification.Name.UIKeyboardWillShow,
+                                               object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(keyboardWillHide),
+                                               name: NSNotification.Name.UIKeyboardWillHide,
+                                               object: nil)
     }
     
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
+    deinit {
+        self.chatNode.delegate = nil
+        self.chatNode.dataSource = nil
+        NotificationCenter.default.removeObserver(self,
+                                                  name: NSNotification.Name.UIKeyboardWillShow,
+                                                  object: nil)
+        NotificationCenter.default.removeObserver(self,
+                                                  name: NSNotification.Name.UIKeyboardWillHide,
+                                                  object: nil)
+    }
+    
     // override
     open func setupChatRangeTuningParameters() {
-        self.node.setTuningParameters(ASRangeTuningParameters(leadingBufferScreenfuls: 1.5,
+        self.chatNode.setTuningParameters(ASRangeTuningParameters(leadingBufferScreenfuls: 1.5,
                                                               trailingBufferScreenfuls: 1.5),
                                       for: .full,
                                       rangeType: .display)
-        self.node.setTuningParameters(ASRangeTuningParameters(leadingBufferScreenfuls: 2,
+        self.chatNode.setTuningParameters(ASRangeTuningParameters(leadingBufferScreenfuls: 2,
                                                               trailingBufferScreenfuls: 2),
                                       for: .full,
                                       rangeType: .preload)
+    }
+    
+    // override
+    open func layoutSpecThatFits(_ constrainedSize: ASSizeRange,
+                                 chatNode: ASCollectionNode) -> ASLayoutSpec {
+        return ASInsetLayoutSpec(insets: .zero, child: self.chatNode)
+    }
+    
+    @objc private func keyboardWillAppear(notification: NSNotification) {
+        if let keyboardFrame: NSValue = notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue {
+            let keyboardRectangle = keyboardFrame.cgRectValue
+            self.keyboardVisiableHeight = keyboardRectangle.height
+            self.node.setNeedsLayout()
+        }
+    }
+    
+    @objc private func keyboardWillHide(notification: NSNotification) {
+        self.keyboardVisiableHeight = 0.0
+        self.node.setNeedsLayout()
     }
 }
 
@@ -124,13 +170,13 @@ extension GTChatNodeController {
 
 // Batch Fetch Handling
 extension GTChatNodeController: UIScrollViewDelegate {
-    public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) { }
+    open func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) { }
     
-    public func scrollViewWillBeginDragging(_ scrollView: UIScrollView) { }
+    open func scrollViewWillBeginDragging(_ scrollView: UIScrollView) { }
     
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        guard let chatDelegate = self.node.delegate as? GTChatNodeDelegate, ASInterfaceStateIncludesVisible(self.interfaceState) else { return }
-        self.node.updateCurrentRange(with: .full)
+        guard let chatDelegate = self.chatNode.delegate as? GTChatNodeDelegate, ASInterfaceStateIncludesVisible(self.interfaceState) else { return }
+        self.chatNode.updateCurrentRange(with: .full)
         self.beginChatNodeBatch(scrollView, chatDelegate: chatDelegate)
     }
     
@@ -151,7 +197,7 @@ extension GTChatNodeController: UIScrollViewDelegate {
         
         switch scope {
         case .append:
-            guard chatDelegate.shouldAppendBatchFetch(for: self.node),
+            guard chatDelegate.shouldAppendBatchFetch(for: self.chatNode),
                 self.hasNextAppendItems else {
                 return
             }
@@ -163,9 +209,9 @@ extension GTChatNodeController: UIScrollViewDelegate {
             if isPagingStatusEnable {
                 self.pagingStatus = .appending
             }
-            chatDelegate.chatNode(self.node, willBeginAppendBatchFetchWith: self.batchFetchingContext)
+            chatDelegate.chatNode(self.chatNode, willBeginAppendBatchFetchWith: self.batchFetchingContext)
         case .prepend:
-            guard chatDelegate.shouldPrependBatchFetch(for: self.node),
+            guard chatDelegate.shouldPrependBatchFetch(for: self.chatNode),
                 self.hasNextPrependItem else {
                 return
             }
@@ -177,7 +223,7 @@ extension GTChatNodeController: UIScrollViewDelegate {
             if isPagingStatusEnable {
                 self.pagingStatus = .prepending
             }
-            chatDelegate.chatNode(self.node, willBeginPrependBatchFetchWith: self.batchFetchingContext)
+            chatDelegate.chatNode(self.chatNode, willBeginPrependBatchFetchWith: self.batchFetchingContext)
         case .none:
             break
         }
@@ -202,7 +248,7 @@ extension GTChatNodeController: UIScrollViewDelegate {
         }
         
         let bounds: CGRect = scrollView.bounds
-        let leadingScreens: CGFloat = self.node.leadingScreensForBatching
+        let leadingScreens: CGFloat = self.chatNode.leadingScreensForBatching
         
         guard leadingScreens > 0.0, !bounds.isEmpty else {
             return .none

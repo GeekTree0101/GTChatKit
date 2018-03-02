@@ -23,6 +23,7 @@ class ChatCellNode: ASCellNode {
         node.borderColor = UIColor.otherChat.cgColor
         node.cornerRadius = 25.0
         node.borderWidth = 1.0
+        
         return node
     }()
     
