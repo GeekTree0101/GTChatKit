@@ -112,7 +112,7 @@ extension ChatNodeController: GTChatNodeDelegate {
         return true
     }
     
-    func chatNode(_ cahtNode: ASCollectionNode, willBeginAppendBatchFetchWith context: ASBatchContext) {
+    func chatNode(_ chatNode: ASCollectionNode, willBeginAppendBatchFetchWith context: ASBatchContext) {
         guard let lastId = self.items.last, lastId < Const.maxiumRange else {
             self.completeBatchFetching(true, endDirection: .prepend)
             self.chatNode.reloadSections(IndexSet(integer: Section.appendIndicator.rawValue))
@@ -142,7 +142,7 @@ extension ChatNodeController: GTChatNodeDelegate {
         })
     }
     
-    func chatNode(_ cahtNode: ASCollectionNode, willBeginPrependBatchFetchWith context: ASBatchContext) {
+    func chatNode(_ chatNode: ASCollectionNode, willBeginPrependBatchFetchWith context: ASBatchContext) {
         guard let firstId = self.items.first, firstId != Const.minimumRange else {
             self.completeBatchFetching(true, endDirection: .prepend)
             self.chatNode.reloadSections(IndexSet(integer: Section.prependIndicator.rawValue))

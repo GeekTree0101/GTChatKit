@@ -13,9 +13,9 @@ public protocol GTChatNodeDelegate: ASCollectionDelegate {
     func shouldAppendBatchFetch(for chatNode: ASCollectionNode) -> Bool
     func shouldPrependBatchFetch(for chatNode: ASCollectionNode) -> Bool
     
-    func chatNode(_ cahtNode: ASCollectionNode,
+    func chatNode(_ chatNode: ASCollectionNode,
                   willBeginAppendBatchFetchWith context: ASBatchContext)
-    func chatNode(_ cahtNode: ASCollectionNode,
+    func chatNode(_ chatNode: ASCollectionNode,
                   willBeginPrependBatchFetchWith context: ASBatchContext)
 }
 
