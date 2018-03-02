@@ -81,7 +81,7 @@ extension GTChatNodeController: UIScrollViewDelegate {
             }
             self.batchFetchingContext.beginBatchFetching()
             if shouldPrintLog {
-                print("[DEBUG] GTChat beging append fetching \(Date().timeIntervalSinceReferenceDate)")
+                print("[DEBUG] GTChat:\(Date().timeIntervalSinceReferenceDate) beging append fetching")
             }
             chatDelegate.chatNode(self.node, willBeginAppendBatchFetchWith: self.batchFetchingContext)
         case .prepend:
@@ -89,10 +89,10 @@ extension GTChatNodeController: UIScrollViewDelegate {
                 return
             }
             if shouldPrintLog {
-                print("[DEBUG] GTChat beging prepend fetching \(Date().timeIntervalSinceReferenceDate)")
+                print("[DEBUG] GTChat:\(Date().timeIntervalSinceReferenceDate) beging prepend fetching")
             }
             self.batchFetchingContext.beginBatchFetching()
-            chatDelegate.chatNode(self.node, willBeginAppendBatchFetchWith: self.batchFetchingContext)
+            chatDelegate.chatNode(self.node, willBeginPrependBatchFetchWith: self.batchFetchingContext)
         case .none:
             break
         }

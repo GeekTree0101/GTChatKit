@@ -10,7 +10,12 @@ import AsyncDisplayKit
 import GTChatKit
 
 class ChatNodeController: GTChatNodeController {
-
+    
+    var items: [Int] = [50, 51, 52, 53, 54, 55, 56, 57, 58, 59]
+    struct Const {
+        static let moreItemCount: Int = 5
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -36,11 +41,12 @@ extension ChatNodeController: GTChatNodeDataSource {
     }
     
     func collectionNode(_ collectionNode: ASCollectionNode, numberOfItemsInSection section: Int) -> Int {
-        return 100
+        return self.items.count
     }
     
     func collectionNode(_ collectionNode: ASCollectionNode, nodeForItemAt indexPath: IndexPath) -> ASCellNode {
-        return ChatCellNode(indexPath.row, pos: indexPath.row % 2 == 0 ? .left: .right)
+        let item = self.items[indexPath.row]
+        return ChatCellNode(item, pos: item % 2 == 0 ? .left: .right)
     }
 }
 
@@ -57,13 +63,44 @@ extension ChatNodeController: GTChatNodeDelegate {
     }
     
     func chatNode(_ cahtNode: ASCollectionNode, willBeginAppendBatchFetchWith context: ASBatchContext) {
+        guard let lastId = self.items.last else {
+            context.completeBatchFetching(true)
+            return
+        }
         
-        context.completeBatchFetching(true)
+        let startId = lastId + 1
+        let newItems: [Int] = Array(startId ..< startId + Const.moreItemCount)
+        
+        let appendIndexPaths: [IndexPath] = newItems.enumerated()
+            .map { IndexPath(item: self.items.count + $0.offset, section: 0) }
+        
+        self.items = items + newItems
+        
+        self.node.performBatchUpdates({
+            self.node.insertItems(at: appendIndexPaths)
+        }, completion: { done in
+            context.completeBatchFetching(done)
+        })
     }
     
     func chatNode(_ cahtNode: ASCollectionNode, willBeginPrependBatchFetchWith context: ASBatchContext) {
+        guard let firstId = self.items.first, firstId != 0 else {
+            context.completeBatchFetching(true)
+            return
+        }
         
-        context.completeBatchFetching(true)
+        let startId = firstId
+        let newItems: [Int] = Array(max(0, startId - Const.moreItemCount) ..< startId)
+        let prependIndexPaths: [IndexPath] = newItems.enumerated()
+            .map { IndexPath(item: $0.offset, section: 0) }
+        
+        self.items = newItems + items
+        
+        self.node.performBatchUpdates({
+            self.node.insertItems(at: prependIndexPaths)
+        }, completion: { done in
+            context.completeBatchFetching(done)
+        })
     }
 }
 
