@@ -15,7 +15,7 @@ class ChatCellNode: ASCellNode {
     
     lazy var profileImageNode: ASNetworkImageNode = {
         let node = ASNetworkImageNode()
-        node.setURL(UIImage.randomURL, resetToDefault: true)
+        node.image = UIImage.gfriend
         node.style.preferredSize = .init(width: 50.0, height: 50.0)
         node.clipsToBounds = true
         node.borderColor = UIColor.myChat.cgColor

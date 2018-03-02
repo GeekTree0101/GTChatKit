@@ -10,11 +10,9 @@ import Foundation
 import UIKit
 
 extension UIImage {
-    static var randomURL: URL {
-        let baseURL = "https://github.com/GeekTree0101/GTChatKit/blob/master/resources/"
+    static var gfriend: UIImage {
         let gfriends = ["eumji", "eunha", "sowon", "yelin", "yuju", "sinbi"]
         let randIndex = Int(arc4random_uniform(UInt32(gfriends.count)))
-        
-        return URL(string: baseURL + gfriends[randIndex] + ".jpg")!
+        return UIImage(named: gfriends[randIndex])!
     }
 }
