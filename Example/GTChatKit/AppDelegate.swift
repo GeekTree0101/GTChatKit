@@ -2,8 +2,8 @@
 //  AppDelegate.swift
 //  GTChatKit
 //
-//  Created by Geektree0101 on 03/02/2018.
-//  Copyright (c) 2018 Geektree0101. All rights reserved.
+//  Created by Geektree0101 on 18/03/02.
+//  Copyright © 2018 Geektree0101 All rights reserved.
 //
 
 import UIKit
@@ -16,6 +16,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        self.window = UIWindow()
+        let rootViewController = ChatNodeController(layout: UICollectionViewFlowLayout())
+        let navigationController = UINavigationController(rootViewController: rootViewController)
+        
+        self.window?.rootViewController = navigationController
+        self.window?.makeKeyAndVisible()
         return true
     }
 
