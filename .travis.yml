@@ -9,6 +9,9 @@ before_install:
   - gem install bundler --no-document
   - pod install --project-directory=Example
 
+script:
+  - swiftlint lint --config Example/.swiftlint.yml
+  
 branches:
   only:
     - master
