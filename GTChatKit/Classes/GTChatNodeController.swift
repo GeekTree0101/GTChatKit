@@ -26,18 +26,51 @@ public protocol GTChatNodeDataSource: ASCollectionDataSource {
 
 open class GTChatNodeController: ASViewController<ASCollectionNode> {
     
-    enum BatchFetchDirection {
+    public enum BatchFetchDirection: UInt {
         case append
         case prepend
         case none
     }
     
+    public enum PaginationStatus {
+        case initial
+        case appending
+        case prepending
+        case some
+        
+        var isLoading: Bool {
+            switch self {
+            case .appending, .prepending:
+                return true
+            default:
+                return false
+            }
+        }
+    }
+    
+    open var leadingScreensForBatching: CGFloat {
+        get {
+            return self.node.leadingScreensForBatching
+        }
+        set(newValue) {
+            self.node.leadingScreensForBatching = newValue
+        }
+    }
+    
+    open var pagingStatus: PaginationStatus = .initial
     open var shouldPrintLog: Bool = true
+    open var hasNextPrependItem: Bool = true
+    open var hasNextAppendItems: Bool = true
     
     fileprivate lazy var batchFetchingContext = ASBatchContext()
     
     open var onPrependBatchFetch: (() -> Void)? = nil
     open var onAppendBatchFetch: (() -> Void)? = nil
+    
+    convenience public init() {
+        let layout = GTChatNodeFlowLayout()
+        self.init(layout: layout)
+    }
     
     required public init(layout: UICollectionViewFlowLayout) {
         let collectionNode = ASCollectionNode(frame: .zero,
@@ -50,18 +83,43 @@ open class GTChatNodeController: ASViewController<ASCollectionNode> {
     }
 }
 
+// Update Pagination Status
+extension GTChatNodeController {
+    open func completeBatchFetching(_ complated: Bool, endDirection: BatchFetchDirection) {
+        switch endDirection {
+        case .append:
+            self.hasNextAppendItems = false
+        case .prepend:
+            self.hasNextPrependItem = false
+        default:
+            break
+        }
+        
+        switch self.pagingStatus {
+        case .appending, .prepending:
+            self.pagingStatus = .some
+        default: break
+        }
+        
+        self.batchFetchingContext.completeBatchFetching(complated)
+    }
+}
+
+// Batch Fetch Handling
 extension GTChatNodeController: UIScrollViewDelegate {
-    public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-
-    }
+    public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) { }
     
-    public func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-
-    }
+    public func scrollViewWillBeginDragging(_ scrollView: UIScrollView) { }
     
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
         guard let chatDelegate = self.node.delegate as? GTChatNodeDelegate, ASInterfaceStateIncludesVisible(self.interfaceState) else { return }
         self.node.updateCurrentRange(with: .full)
+        self.beginChatNodeBatch(scrollView, chatDelegate: chatDelegate)
+    }
+    
+    private func beginChatNodeBatch(_ scrollView: UIScrollView,
+                                    chatDelegate: GTChatNodeDelegate) {
+        guard !self.pagingStatus.isLoading else { return }
         
         if scrollView.isDragging, scrollView.isTracking {
             return
@@ -76,22 +134,26 @@ extension GTChatNodeController: UIScrollViewDelegate {
         
         switch scope {
         case .append:
-            guard chatDelegate.shouldAppendBatchFetch(for: self.node) else {
+            guard chatDelegate.shouldAppendBatchFetch(for: self.node),
+                self.hasNextAppendItems else {
                 return
             }
             self.batchFetchingContext.beginBatchFetching()
             if shouldPrintLog {
                 print("[DEBUG] GTChat:\(Date().timeIntervalSinceReferenceDate) beging append fetching")
             }
+            self.pagingStatus = .appending
             chatDelegate.chatNode(self.node, willBeginAppendBatchFetchWith: self.batchFetchingContext)
         case .prepend:
-            guard chatDelegate.shouldPrependBatchFetch(for: self.node) else {
+            guard chatDelegate.shouldPrependBatchFetch(for: self.node),
+                self.hasNextPrependItem else {
                 return
             }
             if shouldPrintLog {
                 print("[DEBUG] GTChat:\(Date().timeIntervalSinceReferenceDate) beging prepend fetching")
             }
             self.batchFetchingContext.beginBatchFetching()
+            self.pagingStatus = .prepending
             chatDelegate.chatNode(self.node, willBeginPrependBatchFetchWith: self.batchFetchingContext)
         case .none:
             break

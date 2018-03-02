@@ -5,13 +5,13 @@ cache: cocoapods
 podfile: Example/Podfile
 
 before_install:
-  - gem install cocoapods
+  - brew bundle check $BREWFILE || brew bundle $BREWFILE || (brew update && brew bundle $BREWFILE)
+  - gem install bundler --no-document
   - pod install --project-directory=Example
 
-script:
-  - set -o pipefail && xcodebuild test -enableCodeCoverage YES -workspace Example/GTChatKit.xcworkspace -scheme GTChatKit-Example -sdk iphonesimulator9.3 ONLY_ACTIVE_ARCH=NO | xcpretty
-  - pod lib lint
-
+#script:
+#  - swiftlint
+  
 branches:
   only:
     - master
