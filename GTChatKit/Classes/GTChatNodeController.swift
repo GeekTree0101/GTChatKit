@@ -10,7 +10,6 @@ import Foundation
 import AsyncDisplayKit
 
 public protocol GTChatNodeDelegate: ASCollectionDelegate {
-    
     func shouldAppendBatchFetch(for chatNode: ASCollectionNode) -> Bool
     func shouldPrependBatchFetch(for chatNode: ASCollectionNode) -> Bool
     
@@ -25,7 +24,6 @@ public protocol GTChatNodeDataSource: ASCollectionDataSource {
 }
 
 open class GTChatNodeController: ASViewController<ASCollectionNode> {
-    
     public enum BatchFetchDirection: UInt {
         case append
         case prepend
@@ -57,15 +55,16 @@ open class GTChatNodeController: ASViewController<ASCollectionNode> {
         }
     }
     
-    open var pagingStatus: PaginationStatus = .initial
+    // debug logging printer control property
     open var shouldPrintLog: Bool = true
+    
+    // If you want force handling btchFetchingContext, set property as False
+    open var isPagingStatusEnable: Bool = true
+    open var pagingStatus: PaginationStatus = .initial
     open var hasNextPrependItem: Bool = true
     open var hasNextAppendItems: Bool = true
     
     fileprivate lazy var batchFetchingContext = ASBatchContext()
-    
-    open var onPrependBatchFetch: (() -> Void)? = nil
-    open var onAppendBatchFetch: (() -> Void)? = nil
     
     convenience public init() {
         let layout = GTChatNodeFlowLayout()
@@ -86,6 +85,11 @@ open class GTChatNodeController: ASViewController<ASCollectionNode> {
 // Update Pagination Status
 extension GTChatNodeController {
     open func completeBatchFetching(_ complated: Bool, endDirection: BatchFetchDirection) {
+        guard isPagingStatusEnable else {
+            print("[CAUTION] PagingStaute Disabled!")
+            return
+        }
+        
         switch endDirection {
         case .append:
             self.hasNextAppendItems = false
@@ -142,7 +146,10 @@ extension GTChatNodeController: UIScrollViewDelegate {
             if shouldPrintLog {
                 print("[DEBUG] GTChat:\(Date().timeIntervalSinceReferenceDate) beging append fetching")
             }
-            self.pagingStatus = .appending
+            
+            if isPagingStatusEnable {
+                self.pagingStatus = .appending
+            }
             chatDelegate.chatNode(self.node, willBeginAppendBatchFetchWith: self.batchFetchingContext)
         case .prepend:
             guard chatDelegate.shouldPrependBatchFetch(for: self.node),
@@ -153,7 +160,10 @@ extension GTChatNodeController: UIScrollViewDelegate {
                 print("[DEBUG] GTChat:\(Date().timeIntervalSinceReferenceDate) beging prepend fetching")
             }
             self.batchFetchingContext.beginBatchFetching()
-            self.pagingStatus = .prepending
+            
+            if isPagingStatusEnable {
+                self.pagingStatus = .prepending
+            }
             chatDelegate.chatNode(self.node, willBeginPrependBatchFetchWith: self.batchFetchingContext)
         case .none:
             break

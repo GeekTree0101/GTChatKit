@@ -125,7 +125,7 @@ extension ChatNodeController: GTChatNodeDelegate {
         self.node.reloadSections(IndexSet(integer: Section.prependIndicator.rawValue))
         
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Const.forceLoadDelay, execute: {
-
+            
             let startId = firstId
             let newItems: [Int] = Array(max(Const.minimumRange, startId - Const.moreItemCount) ..< startId)
             let prependIndexPaths: [IndexPath] = newItems.enumerated()
