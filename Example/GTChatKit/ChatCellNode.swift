@@ -13,14 +13,21 @@ class ChatCellNode: ASCellNode {
     typealias ATString = NSAttributedString
     typealias Node = ChatCellNode
     
+    let gfriend = String.gfriend
+    
     lazy var profileImageNode: ASNetworkImageNode = {
         let node = ASNetworkImageNode()
-        node.image = UIImage.gfriend
+        node.image = UIImage(named: self.gfriend)
         node.style.preferredSize = .init(width: 50.0, height: 50.0)
         node.clipsToBounds = true
-        node.borderColor = UIColor.myChat.cgColor
+        node.borderColor = UIColor.otherChat.cgColor
         node.cornerRadius = 25.0
-        node.borderWidth = 0.5
+        node.borderWidth = 1.0
+        return node
+    }()
+    
+    lazy var usernameNode: ASTextNode = {
+        let node = ASTextNode()
         return node
     }()
     
@@ -53,10 +60,13 @@ class ChatCellNode: ASCellNode {
         self.contentPosition = pos
         super.init()
         
-        let attr = Node.contentAttributes
         self.contentNode.attributedText =
             ATString(string: String.randomMessage,
-                     attributes: attr)
+                     attributes: Node.contentAttributes)
+        
+        self.usernameNode.attributedText =
+            ATString(string: gfriend,
+                     attributes: Node.usernameAttributes)
         self.automaticallyManagesSubnodes = true
     }
     
@@ -76,11 +86,18 @@ class ChatCellNode: ASCellNode {
                                             isLeft ? .infinity: 15.0)
         
         if isLeft {
+            let usernameWithProfileImageLayout = ASStackLayoutSpec(direction: .vertical,
+                                                                   spacing: 5.0,
+                                                                   justifyContent: .start,
+                                                                   alignItems: .center,
+                                                                   children: [profileImageNode,
+                                                                              usernameNode])
+            
             let profileAttachBalloonLayout = ASStackLayoutSpec(direction: .horizontal,
                                                                spacing: 10.0,
                                                                justifyContent: .start,
                                                                alignItems: .center,
-                                                               children: [profileImageNode, contentOverlayedBalloonLayout])
+                                                               children: [usernameWithProfileImageLayout, contentOverlayedBalloonLayout])
             
             return ASInsetLayoutSpec(insets: layoutInsets,
                                      child: profileAttachBalloonLayout)
@@ -94,6 +111,10 @@ class ChatCellNode: ASCellNode {
 }
 
 extension ChatCellNode {
+    static var usernameAttributes: [NSAttributedStringKey: Any] {
+        return [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 12.0),
+                NSAttributedStringKey.foregroundColor: UIColor.darkGray]
+    }
     
     static var contentAttributes: [NSAttributedStringKey: Any] {
         return [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 15.0),

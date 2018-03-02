@@ -20,4 +20,10 @@ extension String {
         let index = Int(arc4random_uniform(UInt32(list.count)))
         return list[index]
     }
+    
+    static var gfriend: String {
+        let gfriends = ["eumji", "eunha", "sowon", "yelin", "yuju", "sinbi"]
+        let randIndex = Int(arc4random_uniform(UInt32(gfriends.count)))
+        return gfriends[randIndex]
+    }
 }

@@ -19,10 +19,20 @@ extension UIColor {
     }
     
     static var myChat: UIColor {
-        return UIColor(red: 52/255, green: 216/255, blue: 95/255, alpha: 1.0)
+        return UIColor(red: 20/255, green: 111/255, blue: 249/255, alpha: 1.0)
+    }
+    
+    static var frameColor: UIColor {
+        return UIColor(red: 226/255, green: 253/255, blue: 255/255, alpha: 1.0)
+    }
+    
+    static var navigationBarColor: UIColor {
+        return UIColor(red: 0/255, green: 214/255, blue: 238/255, alpha: 1.0)
     }
     
     static var otherChat: UIColor {
-        return UIColor(red: 206/255, green: 206/255, blue: 206/255, alpha: 1.0)
+        return UIColor(red: 14/255, green: 169/255, blue: 245/255, alpha: 1.0)
     }
+    
+
 }

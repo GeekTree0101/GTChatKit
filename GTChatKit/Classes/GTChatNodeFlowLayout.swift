@@ -72,11 +72,12 @@ open class GTChatNodeFlowLayout: UICollectionViewFlowLayout {
                     let newAttributes = self.layoutAttributesForItem(at: indexPathAfterUpdate) {
                     offset += newAttributes.size.height + self.minimumLineSpacing
                     shouldPrependItems = true
+                    shouldAppendItems = false
                 } else if bottomVisibleItem <= item,
                     let newAttributes = self.layoutAttributesForItem(at: indexPathAfterUpdate) {
                     offset += newAttributes.size.height + self.minimumLineSpacing
                     shouldAppendItems = true
-                    
+                    shouldPrependItems = false
                 }
             case.delete:
                 break
@@ -106,15 +107,17 @@ open class GTChatNodeFlowLayout: UICollectionViewFlowLayout {
     
     override open func finalizeCollectionViewUpdates() {
         guard let collectionView = self.collectionView else { return }
-        
         if isPrependingItems {
             let newContentOffset = CGPoint(x: collectionView.contentOffset.x,
                                            y: collectionView.contentOffset.y + offset)
             collectionView.contentOffset = newContentOffset
             CATransaction.commit()
         } else if isAppendingItems {
+            var yOffset: CGFloat = collectionView.contentSize.height + offset
+            yOffset -= collectionView.frame.size.height
+            yOffset += collectionView.contentInset.bottom
             let newContentOffset = CGPoint(x: collectionView.contentOffset.x,
-                                           y: collectionView.contentSize.height + offset - collectionView.frame.size.height + collectionView.contentInset.bottom)
+                                           y: yOffset)
             collectionView.setContentOffset(newContentOffset, animated: true)
         }
     }

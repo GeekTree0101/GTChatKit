@@ -23,7 +23,7 @@ class ChatNodeController: GTChatNodeController {
         static let maxiumRange: Int = 100
         static let minimumRange: Int = 0
         static let forceLoadDelay: TimeInterval = 2.0
-        static let moreItemCount: Int = 5
+        static let moreItemCount: Int = 10
     }
     
     override func viewDidLoad() {
@@ -31,12 +31,18 @@ class ChatNodeController: GTChatNodeController {
         self.leadingScreensForBatching = 3.0
         self.node.delegate = self
         self.node.dataSource = self
-        self.title = "GTChatKit Test"
+        self.title = "Buddy Chat"
+        self.node.backgroundColor = UIColor.frameColor
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         self.node.reloadData()
+        self.node.reloadData(completion: { () in
+            let center = self.items.count / 2
+            self.node.scrollToItem(at: .init(item: center, section: Section.messages.rawValue),
+                                   at: .centeredVertically, animated: false)
+        })
     }
 
     override func didReceiveMemoryWarning() {
