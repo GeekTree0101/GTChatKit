@@ -75,10 +75,23 @@ open class GTChatNodeController: ASViewController<ASCollectionNode> {
         let collectionNode = ASCollectionNode(frame: .zero,
                                               collectionViewLayout: layout)
         super.init(node: collectionNode)
+        self.setupChatRangeTuningParameters()
     }
     
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    // override
+    open func setupChatRangeTuningParameters() {
+        self.node.setTuningParameters(ASRangeTuningParameters(leadingBufferScreenfuls: 1.5,
+                                                              trailingBufferScreenfuls: 1.5),
+                                      for: .full,
+                                      rangeType: .display)
+        self.node.setTuningParameters(ASRangeTuningParameters(leadingBufferScreenfuls: 2,
+                                                              trailingBufferScreenfuls: 2),
+                                      for: .full,
+                                      rangeType: .preload)
     }
 }
 
