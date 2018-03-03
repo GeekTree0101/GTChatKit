@@ -158,6 +158,30 @@ you do not need to be aware of (1: initial status) existence
     }
 ```
 
+### 7. GTChatKit System Message Input Box
+
+``` swift
+        let node = GTChatMessageBoxNode()
+
+        // Create ChatMessageButtonNode
+        let cameraButton = GTChatMessageButtonNode()
+            .setButtonSize(.init(width: 24.0, height: 24.0))
+            .setButtonImage(#imageLiteral(resourceName: "photo"), color: .white, for: .normal)
+            .setButtonImage(#imageLiteral(resourceName: "photo"), color: UIColor.white.withAlphaComponent(0.5), for: .disabled)
+        
+        let sendButton = GTChatMessageButtonNode()
+            .setButtonSize(.init(width: 24.0, height: 24.0))
+            .setButtonImage(#imageLiteral(resourceName: "send"), color: .white, for: .normal)
+            .setButtonImage(#imageLiteral(resourceName: "send"), color: UIColor.white.withAlphaComponent(0.5), for: .disabled)
+        
+        node.messageNode.setMessageContainerInsets(UIEdgeInsetsMake(5.0, 10.0, 5.0, 10.0))
+        
+        // apply Message Box Attributes
+        node.setLeftButtons([cameraButton], spacing: 10.0) // attach left button items
+            .setRightButtons([sendButton], spacing: 10.0) // attach right button items
+            .setMessageBoxHeight(50.0, maxiumNumberOfLine: 6, isRounded: true) // set message input box size
+```
+
 ## Requirements
 - Xcode <~ 9.0
 - iOS <~ 9.x
