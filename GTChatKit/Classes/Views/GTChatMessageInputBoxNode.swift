@@ -55,7 +55,7 @@ public class GTChatMessageInputBoxNode: ASEditableTextNode {
         return self
     }
     
-    override func didLoad() {
+    override public func didLoad() {
         super.didLoad()
         self.textView.showsVerticalScrollIndicator = false
         self.textView.showsHorizontalScrollIndicator = false
