@@ -48,8 +48,8 @@ public class GTChatMessageBoxNode: ASDisplayNode {
         
         self.messageNode.setMessageContainerInsets(UIEdgeInsetsMake(5.0, 10.0, 5.0, 10.0))
         
-        self.setRightButtons([cameraButton], spacing: 10.0)
-            .setLeftButtons([sendButton], spacing: 10.0)
+        self.setLeftButtons([cameraButton], spacing: 10.0)
+            .setRightButtons([sendButton], spacing: 10.0)
             .setMessageBoxHeight(50.0, maxiumNumberOfLine: 6, isRounded: true)
         return self
     }

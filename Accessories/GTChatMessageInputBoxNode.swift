@@ -54,6 +54,12 @@ public class GTChatMessageInputBoxNode: ASEditableTextNode {
         self.tintColor = color
         return self
     }
+    
+    override func didLoad() {
+        super.didLoad()
+        self.textView.showsVerticalScrollIndicator = false
+        self.textView.showsHorizontalScrollIndicator = false
+    }
 }
 
 extension GTChatMessageInputBoxNode {
