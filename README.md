@@ -185,7 +185,8 @@ you do not need to be aware of (1: initial status) existence
 ## Requirements
 - Xcode <~ 9.0
 - iOS <~ 9.x
-- Swift <~ 3.x, 4.0
+- Swift 4.0 (master)
+- Swift 3.x (swift3.x)
 
 ## Installation
 
