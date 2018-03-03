@@ -13,7 +13,11 @@ class ChatNodeController: GTChatNodeController {
     
     var items: [Int] = [50, 51, 52, 53, 54, 55, 56, 57, 58, 59]
     
-    lazy var messageNode = GTChatMessageBoxNode()
+    lazy var messageNode: GTChatMessageBoxNode = {
+        let node = GTChatMessageBoxNode()
+        node.setupDefaultMessageBox()
+        return node
+    }()
     
     private var keyboardHeight: CGFloat = 0.0
     
