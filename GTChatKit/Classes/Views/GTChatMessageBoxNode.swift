@@ -15,11 +15,11 @@ public class GTChatMessageBoxNode: ASDisplayNode {
     
     @objc lazy open var messageNode = GTChatMessageInputBoxNode()
     open var messageBoxInsets: UIEdgeInsets = UIEdgeInsetsMake(10.0, 10.0, 10.0, 10.0)
-    private var leftButtonGroups: [GTChatMessageButtonNode] = []
-    private var leftButtonGroupSpacing: CGFloat = 10.0
+    fileprivate var leftButtonGroups: [GTChatMessageButtonNode] = []
+    fileprivate var leftButtonGroupSpacing: CGFloat = 10.0
     
-    private var rightButtonGroups: [GTChatMessageButtonNode] = []
-    private var rightButtonGroupSpacing: CGFloat = 10.0
+    fileprivate var rightButtonGroups: [GTChatMessageButtonNode] = []
+    fileprivate var rightButtonGroupSpacing: CGFloat = 10.0
     
     fileprivate var minimumMessageBoxHeight: CGFloat = 50.0
     fileprivate var maximumVisibleMessageNumberOfLines: Int = 6
@@ -37,26 +37,26 @@ public class GTChatMessageBoxNode: ASDisplayNode {
     
     @discardableResult public func setupDefaultMessageBox() -> Node {
         let cameraButton = GTChatMessageButtonNode()
-            .setButtonSize(.init(width: 24.0, height: 24.0))
-            .setButtonImage(#imageLiteral(resourceName: "photo"), color: .white, for: .normal)
-            .setButtonImage(#imageLiteral(resourceName: "photo"), color: UIColor.white.withAlphaComponent(0.5), for: .disabled)
+            .setChatButtonSize(.init(width: 24.0, height: 24.0))
+            .setChatButtonImage(#imageLiteral(resourceName: "photo"), color: .white, for: .normal)
+            .setChatButtonImage(#imageLiteral(resourceName: "photo"), color: UIColor.white.withAlphaComponent(0.5), for: .disabled)
         
         let sendButton = GTChatMessageButtonNode()
-            .setButtonSize(.init(width: 24.0, height: 24.0))
-            .setButtonImage(#imageLiteral(resourceName: "send"), color: .white, for: .normal)
-            .setButtonImage(#imageLiteral(resourceName: "send"), color: UIColor.white.withAlphaComponent(0.5), for: .disabled)
+            .setChatButtonSize(.init(width: 24.0, height: 24.0))
+            .setChatButtonImage(#imageLiteral(resourceName: "send"), color: .white, for: .normal)
+            .setChatButtonImage(#imageLiteral(resourceName: "send"), color: UIColor.white.withAlphaComponent(0.5), for: .disabled)
         
-        self.messageNode.setMessageContainerInsets(UIEdgeInsetsMake(5.0, 10.0, 5.0, 10.0))
+        self.messageNode.setChatMessageContainerInsets(UIEdgeInsetsMake(5.0, 10.0, 5.0, 10.0))
         
-        self.setLeftButtons([cameraButton], spacing: 10.0)
-            .setRightButtons([sendButton], spacing: 10.0)
-            .setMessageBoxHeight(50.0, maxiumNumberOfLine: 6, isRounded: true)
+        self.setChatLeftButtons([cameraButton], spacing: 10.0)
+            .setChatRightButtons([sendButton], spacing: 10.0)
+            .setChatMessageBoxHeight(50.0, maxiumNumberOfLine: 6, isRounded: true)
         return self
     }
     
-    @discardableResult public func setMessageBoxHeight(_ minimumHeight: CGFloat,
-                                                       maxiumNumberOfLine: Int,
-                                                       isRounded: Bool) -> Node {
+    @discardableResult public func setChatMessageBoxHeight(_ minimumHeight: CGFloat,
+                                                           maxiumNumberOfLine: Int,
+                                                           isRounded: Bool) -> Node {
         self.style.height = .init(unit: .points, value: minimumHeight)
         self.minimumMessageBoxHeight = minimumHeight
         self.maximumVisibleMessageNumberOfLines = maxiumNumberOfLine
@@ -68,15 +68,15 @@ public class GTChatMessageBoxNode: ASDisplayNode {
         return self
     }
     
-    @discardableResult public func setLeftButtons(_ buttons: [GTChatMessageButtonNode],
-                                           spacing: CGFloat) -> Node {
+    @discardableResult public func setChatLeftButtons(_ buttons: [GTChatMessageButtonNode],
+                                                      spacing: CGFloat) -> Node {
         self.leftButtonGroupSpacing = spacing
         self.leftButtonGroups = buttons
         return self
     }
     
-    @discardableResult public func setRightButtons(_ buttons: [GTChatMessageButtonNode],
-                                            spacing: CGFloat) -> Node {
+    @discardableResult public func setChatRightButtons(_ buttons: [GTChatMessageButtonNode],
+                                                       spacing: CGFloat) -> Node {
         self.rightButtonGroupSpacing = spacing
         self.rightButtonGroups = buttons
         return self
@@ -103,9 +103,9 @@ public class GTChatMessageBoxNode: ASDisplayNode {
         
         if let rightButtonGroupLayout = self.rightButtonGroupLayoutSpec() {
             let rightButtonRelativeLayout = ASRelativeLayoutSpec(horizontalPosition: .end,
-                                                                verticalPosition: .end,
-                                                                sizingOption: [],
-                                                                child: rightButtonGroupLayout)
+                                                                 verticalPosition: .end,
+                                                                 sizingOption: [],
+                                                                 child: rightButtonGroupLayout)
             rightButtonRelativeLayout.style.spacingBefore = rightButtonGroupSpacing
             messageBoxElements.append(rightButtonRelativeLayout)
         }

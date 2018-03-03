@@ -28,27 +28,27 @@ public class GTChatMessageButtonNode: ASButtonNode {
         self.style.preferredSize = self.buttonSize
     }
     
-    @discardableResult open func setButtonImage(_ image: UIImage,
-                                           color: UIColor,
-                                           for status: UIControlState) -> Node {
+    @discardableResult open func setChatButtonImage(_ image: UIImage,
+                                                    color: UIColor,
+                                                    for status: UIControlState) -> Node {
         self.setImage(image.applyButtonColor(with: color), for: status)
         return self
     }
     
-    @discardableResult open func setButtonSize(_ size: CGSize) -> Node {
+    @discardableResult open func setChatButtonSize(_ size: CGSize) -> Node {
         self.buttonSize = size
         self.style.preferredSize = size
         return self
     }
     
-    @discardableResult open func setButtonTintColor(_ color: UIColor) -> Node {
+    @discardableResult @objc open func setChatButtonTintColor(_ color: UIColor) -> Node {
         self.buttonTintColor = color
         self.tintColor = color
         return self
     }
     
-    @discardableResult open func setButtonText(_ title: NSAttributedString,
-                                               for state: UIControlState) -> Node {
+    @discardableResult open func setChatButtonText(_ title: NSAttributedString,
+                                                   for state: UIControlState) -> Node {
         self.setAttributedTitle(title, for: state)
         return self
     }

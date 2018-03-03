@@ -20,9 +20,9 @@ public class GTChatMessageInputBoxNode: ASEditableTextNode {
         
         self.backgroundColor = .white
         self.placeholderEnabled = true
-        self.setPlaceholder("Type Message",
+        self.setChatPlaceholder("Type Message",
                             attribute: Node.defaultPlaceholdereAttributes)
-        self.setTypingAttributes(Node.defaultTypingAttributes)
+        self.setChatTypingAttributes(Node.defaultTypingAttributes)
         
         self.cursorColor(.chatKitDefaultColor)
         self.style.flexGrow = 1.0
@@ -33,19 +33,19 @@ public class GTChatMessageInputBoxNode: ASEditableTextNode {
         self.delegate = nil
     }
     
-    @discardableResult func setPlaceholder(_ text: String,
-                                           attribute: [NSAttributedStringKey: Any]) -> Node {
+    @discardableResult func setChatPlaceholder(_ text: String,
+                                               attribute: [String: Any]) -> Node {
         self.attributedPlaceholderText = .init(string: text,
                                                attributes: attribute)
         return self
     }
     
-    @discardableResult func setTypingAttributes(_ attribute: [String: Any]) -> Node {
+    @discardableResult @objc func setChatTypingAttributes(_ attribute: [String: Any]) -> Node {
         self.typingAttributes = attribute
         return self
     }
     
-    @discardableResult func setMessageContainerInsets(_ insets: UIEdgeInsets) -> Node {
+    @discardableResult func setChatMessageContainerInsets(_ insets: UIEdgeInsets) -> Node {
         self.textContainerInset = insets
         return self
     }
@@ -63,13 +63,13 @@ public class GTChatMessageInputBoxNode: ASEditableTextNode {
 }
 
 extension GTChatMessageInputBoxNode {
-    static var defaultPlaceholdereAttributes: [NSAttributedStringKey: Any] {
-        return [NSAttributedStringKey.foregroundColor: UIColor.lightGray,
-                NSAttributedStringKey.font: UIFont.systemFont(ofSize: 15.0)]
+    static var defaultPlaceholdereAttributes: [String: Any] {
+        return [NSForegroundColorAttributeName: UIColor.lightGray,
+                NSFontAttributeName: UIFont.systemFont(ofSize: 15.0)]
     }
     
     static var defaultTypingAttributes: [String: Any] {
-        return [NSAttributedStringKey.foregroundColor.rawValue: UIColor.darkGray,
-                NSAttributedStringKey.font.rawValue: UIFont.systemFont(ofSize: 15.0)]
+        return [NSForegroundColorAttributeName: UIColor.darkGray,
+                NSFontAttributeName: UIFont.systemFont(ofSize: 15.0)]
     }
 }
